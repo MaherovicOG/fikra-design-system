@@ -70,12 +70,10 @@ import { DesignTokens } from '@/components/showcase/design-tokens'
 import { componentCatalog } from '@/lib/component-catalog'
 import { cn } from '@/lib/utils'
 
-const storybookUrl = `${(
-  import.meta.env.VITE_STORYBOOK_URL ||
-  (import.meta.env.DEV
-    ? 'http://localhost:6006'
-    : `${import.meta.env.BASE_URL}storybook`)
-).replace(/\/+$/, '')}/`
+// Production always uses the Storybook bundled into this deployment.
+const storybookUrl = import.meta.env.DEV
+  ? 'http://localhost:6006/'
+  : `${import.meta.env.BASE_URL}storybook/`
 const navigation = [
   { name: 'Overview', icon: LayoutDashboard },
   { name: 'Components', icon: Component },

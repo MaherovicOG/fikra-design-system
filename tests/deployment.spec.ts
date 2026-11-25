@@ -14,6 +14,35 @@ test('production app opens its bundled Storybook', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
+test('component cards open documentation on the same deployment', async ({
+  page,
+}) => {
+  await page.goto('http://127.0.0.1:4173/')
+  await page
+    .getByRole('button', { name: 'Components', exact: false })
+    .first()
+    .click()
+  const link = page.getByRole('link').filter({
+    has: page.getByRole('heading', { name: 'Accordion', exact: true }),
+  })
+  await expect(link).toHaveAttribute(
+    'href',
+    '/storybook/?path=/docs/data-display-accordion--docs',
+  )
+  const popupPromise = page.waitForEvent('popup')
+  await link.click()
+  const storybook = await popupPromise
+  await expect(storybook).toHaveURL(
+    'http://127.0.0.1:4173/storybook/?path=/docs/data-display-accordion--docs',
+  )
+  await expect(
+    storybook
+      .frameLocator('#storybook-preview-iframe')
+      .getByRole('heading', { name: 'Accordion', exact: true })
+      .first(),
+  ).toBeVisible()
+})
+
 test('bundled stories and documentation load under the deployment subdirectory', async ({
   page,
 }) => {

@@ -17,7 +17,7 @@ In a second terminal, start Storybook:
 npm run storybook
 ```
 
-Vite normally opens at `http://localhost:5173`; Storybook runs at `http://localhost:6006`. Production links point to `/storybook/` on the same domain. Set `VITE_STORYBOOK_URL` before building only if Storybook is hosted elsewhere. Component cards link directly to their Storybook documentation.
+Vite normally opens at `http://localhost:5173`; Storybook runs at `http://localhost:6006`. Production links always point to `/storybook/` on the same domain. `VITE_STORYBOOK_URL` is no longer used, so an old environment value cannot redirect production links to localhost. Component cards link directly to their Storybook documentation.
 
 The showcase has Overview, Components, Design Tokens, and Patterns views, a persisted theme switch, a searchable component catalog, project creation with local validation, and a table with search, sorting, selection, and pagination. Project data and submissions are demonstration state and are not persisted to a server.
 
@@ -88,7 +88,7 @@ The root `vercel.json` configures the Vite framework, `npm run build`, and the `
 - React showcase: `https://your-domain.vercel.app/`
 - Storybook: `https://your-domain.vercel.app/storybook/`
 
-Use the repository root as the Vercel project's Root Directory and Node.js 24. Commit and push these changes to the connected repository, then redeploy. No `VITE_STORYBOOK_URL` variable is needed for this setup; remove a previous localhost or external value if you want the bundled Storybook. Trailing slashes are enabled for directory URLs so Storybook's relative assets resolve correctly; files such as `iframe.html` keep their extensions.
+Use the repository root as the Vercel project's Root Directory and Node.js 24. Commit and push these changes to the connected repository, then redeploy. No `VITE_STORYBOOK_URL` variable is needed or read in production. Trailing slashes are enabled for directory URLs so Storybook's relative assets resolve correctly; files such as `iframe.html` keep their extensions. If a live deployment still links to localhost, verify it was built from the latest commit: environment and source changes do not update previously built JavaScript.
 
 To preview the complete deployment locally:
 

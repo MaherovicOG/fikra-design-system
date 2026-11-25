@@ -14,7 +14,10 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run format:check
-      - run: npm run build
+      - name: Build with a stale localhost override to verify production links
+        run: npm run build
+        env:
+          VITE_STORYBOOK_URL: http://localhost:6006
       - run: npm run build-storybook
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
