@@ -17,7 +17,7 @@ In a second terminal, start Storybook:
 npm run storybook
 ```
 
-Vite normally opens at `http://localhost:5173`; Storybook runs at `http://localhost:6006`. Set `VITE_STORYBOOK_URL` in `.env.local` before building if Storybook is hosted elsewhere. Component cards link directly to their Storybook documentation.
+Vite normally opens at `http://localhost:5173`; Storybook runs at `http://localhost:6006`. Production links point to `/storybook/` on the same domain. Set `VITE_STORYBOOK_URL` before building only if Storybook is hosted elsewhere. Component cards link directly to their Storybook documentation.
 
 The showcase has Overview, Components, Design Tokens, and Patterns views, a persisted theme switch, a searchable component catalog, project creation with local validation, and a table with search, sorting, selection, and pagination. Project data and submissions are demonstration state and are not persisted to a server.
 
@@ -79,7 +79,25 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-`build` checks the application, stories, and Storybook configuration under strict TypeScript, then writes the application to `dist/`. `build-storybook` writes standalone documentation to `storybook-static/`. Both directories can be hosted on any static server; no deployment is configured.
+`build` checks the application, stories, and Storybook configuration under strict TypeScript, then writes the application to `dist/` and Storybook to `dist/storybook/`. Deploy `dist/` to publish both together. `build:app` builds only the React application; `build-storybook` writes a standalone Storybook to `storybook-static/`.
+
+## Deploy to Vercel
+
+The root `vercel.json` configures the Vite framework, `npm run build`, and the `dist` output directory. Both sites are included in every build:
+
+- React showcase: `https://your-domain.vercel.app/`
+- Storybook: `https://your-domain.vercel.app/storybook/`
+
+Use the repository root as the Vercel project's Root Directory and Node.js 24. Commit and push these changes to the connected repository, then redeploy. No `VITE_STORYBOOK_URL` variable is needed for this setup; remove a previous localhost or external value if you want the bundled Storybook. Trailing slashes are enabled for directory URLs so Storybook's relative assets resolve correctly; files such as `iframe.html` keep their extensions.
+
+To preview the complete deployment locally:
+
+```sh
+npm run build
+npm run preview
+```
+
+Open `http://localhost:4173/` for the app or `http://localhost:4173/storybook/` for Storybook. The configuration uses [Vercel's build/output settings](https://vercel.com/docs/project-configuration/vercel-json) and [Storybook's static build](https://storybook.js.org/docs/sharing/publish-storybook).
 
 The browser suite automatically starts production preview servers when they are not already running. It checks every story in both light and dark mode for render/console errors, verifies installed-module coverage and autodocs, and exercises desktop/mobile navigation, theme persistence, form validation, dialog focus, and table interactions. A Chromium installation is needed once per machine.
 

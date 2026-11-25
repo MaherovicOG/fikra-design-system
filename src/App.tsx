@@ -70,8 +70,12 @@ import { DesignTokens } from '@/components/showcase/design-tokens'
 import { componentCatalog } from '@/lib/component-catalog'
 import { cn } from '@/lib/utils'
 
-const storybookUrl =
-  import.meta.env.VITE_STORYBOOK_URL || 'http://localhost:6006'
+const storybookUrl = `${(
+  import.meta.env.VITE_STORYBOOK_URL ||
+  (import.meta.env.DEV
+    ? 'http://localhost:6006'
+    : `${import.meta.env.BASE_URL}storybook`)
+).replace(/\/+$/, '')}/`
 const navigation = [
   { name: 'Overview', icon: LayoutDashboard },
   { name: 'Components', icon: Component },
@@ -598,7 +602,7 @@ export default function App() {
                 {catalog.map((item) => (
                   <a
                     key={item.slug}
-                    href={`${storybookUrl}/?path=/docs/${item.group.toLowerCase().replaceAll(' ', '-')}-${item.slug}--docs`}
+                    href={`${storybookUrl}?path=/docs/${item.group.toLowerCase().replaceAll(' ', '-')}-${item.slug}--docs`}
                     target="_blank"
                     rel="noreferrer"
                     className="group rounded-xl border bg-card p-5 transition-colors outline-none hover:border-primary/60 hover:bg-accent/30 focus-visible:ring-2 focus-visible:ring-ring"
